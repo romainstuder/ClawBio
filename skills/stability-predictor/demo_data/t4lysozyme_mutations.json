@@ -1,0 +1,23 @@
+{
+  "chain": "A",
+  "mutations": [
+    {
+      "position": 99,
+      "wt": "L",
+      "mt": "A",
+      "note": "Classic cavity-creating mutation, Eriksson et al. 1992 Science"
+    },
+    {
+      "position": 157,
+      "wt": "T",
+      "mt": "I",
+      "note": "Surface mutation, Pjura & Matthews 1993"
+    },
+    {
+      "position": 26,
+      "wt": "T",
+      "mt": "S",
+      "note": "Conservative T\u2192S substitution, near-neutral"
+    }
+  ]
+}

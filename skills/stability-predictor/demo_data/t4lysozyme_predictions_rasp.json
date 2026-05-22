@@ -1,0 +1,34 @@
+{
+  "method": "rasp",
+  "method_version": "1.2.0 (cached)",
+  "source": "literature-grounded estimates for demo only \u2014 not measurements",
+  "predictions": [
+    {
+      "chain": "A",
+      "position": 99,
+      "wt": "L",
+      "mt": "A",
+      "ddg": 3.92,
+      "confidence": 0.74,
+      "notes": "Buried hydrophobic core; large cavity created"
+    },
+    {
+      "chain": "A",
+      "position": 157,
+      "wt": "T",
+      "mt": "I",
+      "ddg": 0.71,
+      "confidence": 0.68,
+      "notes": "Surface site, mild effect"
+    },
+    {
+      "chain": "A",
+      "position": 26,
+      "wt": "T",
+      "mt": "S",
+      "ddg": 0.18,
+      "confidence": 0.66,
+      "notes": "Conservative swap, near-neutral"
+    }
+  ]
+}

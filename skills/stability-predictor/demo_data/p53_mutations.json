@@ -1,0 +1,11 @@
+{
+  "chain": "A",
+  "mutations": [
+    {
+      "position": 220,
+      "wt": "Y",
+      "mt": "C",
+      "note": "Canonical destabilising cancer mutation, Joerger & Fersht 2007"
+    }
+  ]
+}

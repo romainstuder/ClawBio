@@ -1,0 +1,16 @@
+{
+  "method": "rasp",
+  "method_version": "1.2.0 (cached)",
+  "source": "literature-grounded estimates for demo only \u2014 not measurements",
+  "predictions": [
+    {
+      "chain": "A",
+      "position": 220,
+      "wt": "Y",
+      "mt": "C",
+      "ddg": 2.81,
+      "confidence": 0.74,
+      "notes": "Buried aromatic to cysteine; loss of packing in \u03b2-sandwich"
+    }
+  ]
+}

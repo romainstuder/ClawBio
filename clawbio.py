@@ -728,6 +728,16 @@ SKILLS = {
         "no_input_required": False,
         "accepts_genotypes": False,
     },
+    "stability": {
+        "script": SKILLS_DIR / "stability-predictor" / "stability_predictor.py",
+        "demo_args": ["--demo"],
+        "description": "Stability predictor: ΔΔG of point mutations via RaSP, ThermoMPNN, FoldX",
+        "allowed_extra_flags": {
+            "--structure", "--mutations", "--method", "--demo-set", "--verbose",
+        },
+        "no_input_required": True,
+        "accepts_genotypes": False,
+    },
 }
 
 try:
@@ -1369,7 +1379,8 @@ def main():
         default=None,
         help="Minimum baseMean retained in diffviz bulk display plots/tables",
     )
-    run_parser.add_argument("--method", default=None, help="Embedding backend (scrna-embedding skill)")
+    run_parser.add_argument("--method", default=None, help="Embedding backend (scrna-embedding skill); also ΔΔG method (stability skill)")
+    run_parser.add_argument("--demo-set", dest="demo_set", default=None, help="Demo dataset name (stability skill: cftr|rubisco)")
     run_parser.add_argument("--layer", default=None, help="Raw-count layer for `.h5ad` input (scrna-embedding skill)")
     run_parser.add_argument("--batch-key", default=None, help="obs batch column for integration (scrna-embedding skill)")
     run_parser.add_argument("--labels-key", default=None, help="obs label column for scANVI (scrna-embedding skill)")
@@ -1718,6 +1729,8 @@ def main():
             extra.extend(["--min-basemean", str(args.min_basemean)])
         if getattr(args, "method", None):
             extra.extend(["--method", args.method])
+        if getattr(args, "demo_set", None):
+            extra.extend(["--demo-set", args.demo_set])
         if getattr(args, "layer", None):
             extra.extend(["--layer", args.layer])
         if getattr(args, "batch_key", None):

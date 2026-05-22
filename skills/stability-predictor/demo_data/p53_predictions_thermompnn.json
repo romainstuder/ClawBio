@@ -1,0 +1,16 @@
+{
+  "method": "thermompnn",
+  "method_version": "1.0.0 (cached)",
+  "source": "literature-grounded estimates for demo only \u2014 not measurements",
+  "predictions": [
+    {
+      "chain": "A",
+      "position": 220,
+      "wt": "Y",
+      "mt": "C",
+      "ddg": 3.04,
+      "confidence": 0.77,
+      "notes": "Destabilising; matches experimental \u0394\u0394G ~3 kcal/mol"
+    }
+  ]
+}

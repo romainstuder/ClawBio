@@ -49,6 +49,7 @@ When the user asks a question, match it to a skill and act:
 | Differential expression visualisation, volcano plot styling, marker heatmap, DE report plots, contrast visualisation | `skills/diff-visualizer/` | Run `diff_visualizer.py` |
 | Proteomics differential expression, LFQ, MaxQuant, DIA-NN, protein DE, proteomics volcano plot | `skills/proteomics-de/` | Run `proteomics_de.py` |
 | Protein structure, AlphaFold, PDB, Boltz | `skills/struct-predictor/` | Run `struct_predictor.py` |
+| Protein stability, ΔΔG, mutation stability, will mutation destabilize, FoldX, RaSP, ThermoMPNN, folding free energy | `skills/stability-predictor/` | Run `stability_predictor.py` |
 | Clinical variant classification, ACMG, AMP, secondary findings, germline VCF interpretation | `skills/clinical-variant-reporter/` | Run `clinical_variant_reporter.py` |
 | Reproducibility, Nextflow, Singularity, Conda export | `skills/repro-enforcer/` | Read SKILL.md, apply methodology |
 | Sequence QC, FASTQ, alignment, BAM, trimming | `skills/seq-wrangler/` | Read SKILL.md, apply methodology |

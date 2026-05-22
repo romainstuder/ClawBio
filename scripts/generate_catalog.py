@@ -211,6 +211,7 @@ FOLDER_TO_ALIAS = {
     "rnaseq-de": "rnaseq",
     "diff-visualizer": "diffviz",
     "llm-biobank-bench": "llm-bench",
+    "stability-predictor": "stability",
 }
 
 # Skill folders excluded from the public catalog (local-only / gitignored)

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generated_by": "scripts/generate_catalog.py",
-  "skill_count": 67,
+  "skill_count": 68,
   "galaxy_tool_count": 8182,
   "skills": [
     {
@@ -92,7 +92,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/archaic-introgression/archaic_introgression.py --demo",
+      "demo_command": "python skills/archaic-introgression/pipeline.py --demo",
       "dependencies": [],
       "tags": [],
       "trigger_keywords": [],
@@ -414,7 +414,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/clinical-trial-finder/opentargets.py --demo",
+      "demo_command": "python skills/clinical-trial-finder/euctr.py --demo",
       "dependencies": [
         "python>=3.11"
       ],
@@ -448,7 +448,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/clinical-variant-reporter/clinical_variant_reporter.py --demo",
+      "demo_command": "python skills/clinical-variant-reporter/acmg_engine.py --demo",
       "dependencies": [],
       "tags": [
         "acmg",
@@ -1064,7 +1064,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/illumina-bridge/illumina_providers.py --demo",
+      "demo_command": "python skills/illumina-bridge/illumina_bridge.py --demo",
       "dependencies": [],
       "tags": [
         "illumina",
@@ -1341,7 +1341,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/nutrigx-advisor/parse_input.py --demo",
+      "demo_command": "python skills/nutrigx-advisor/score_variants.py --demo",
       "dependencies": [],
       "tags": [
         "nutrigenomics",
@@ -1594,7 +1594,7 @@
       "has_script": true,
       "has_tests": true,
       "has_demo": true,
-      "demo_command": "python skills/pubmed-summariser/pubmed_summariser.py --demo",
+      "demo_command": "python skills/pubmed-summariser/pubmed_api.py --demo",
       "dependencies": [],
       "tags": [],
       "trigger_keywords": [
@@ -1885,6 +1885,35 @@
         "genomebook compile",
         "synthetic genome",
         "character genome"
+      ],
+      "chaining_partners": []
+    },
+    {
+      "name": "stability-predictor",
+      "cli_alias": "stability",
+      "description": "Predict the folding stability effect (ΔΔG, kcal/mol) of point mutations in a protein structure using one or more methods: RaSP (default), ThermoMPNN, or FoldX (optional). Returns per-method values, consensus call, and confidence flags. Validated against ProTherm/FireProtDB benchmarks.\n",
+      "version": "0.1.0",
+      "status": "planned",
+      "has_script": true,
+      "has_tests": true,
+      "has_demo": true,
+      "demo_command": "python clawbio.py run stability --demo",
+      "dependencies": [],
+      "tags": [
+        "protein",
+        "stability",
+        "ddg",
+        "mutation-effects",
+        "structural-biology",
+        "variant-interpretation"
+      ],
+      "trigger_keywords": [
+        "predict stability",
+        "ddg prediction",
+        "stability effect of mutation",
+        "will this mutation destabilize",
+        "folding free energy",
+        "delta delta g"
       ],
       "chaining_partners": []
     },
