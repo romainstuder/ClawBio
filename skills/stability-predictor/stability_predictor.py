@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import TypedDict
 
@@ -408,19 +409,16 @@ def _write_outputs(
 def _print_summary(consensus_results: list, output_dir: Path) -> None:
     """One-screen summary printed to stdout after a successful run."""
     n = len(consensus_results)
-    n_destab = sum(1 for c in consensus_results if c.direction.value == "destabilizing")
-    n_neutral = sum(1 for c in consensus_results if c.direction.value == "neutral")
-    n_stab = sum(1 for c in consensus_results if c.direction.value == "stabilizing")
-    n_unknown = sum(1 for c in consensus_results if c.direction.value == "unknown")
+    direction_counts = Counter(c.direction.value for c in consensus_results)
     n_flagged = sum(1 for c in consensus_results if c.flags)
 
     print()
     print(f"Predicted {n} mutation(s):")
-    print(f"  destabilizing: {n_destab}")
-    print(f"  neutral:       {n_neutral}")
-    print(f"  stabilizing:   {n_stab}")
-    if n_unknown:
-        print(f"  unknown:       {n_unknown}  (all methods failed)")
+    print(f"  destabilizing: {direction_counts['destabilizing']}")
+    print(f"  neutral:       {direction_counts['neutral']}")
+    print(f"  stabilizing:   {direction_counts['stabilizing']}")
+    if direction_counts["unknown"]:
+        print(f"  unknown:       {direction_counts['unknown']}  (all methods failed)")
     if n_flagged:
         print(f"  flagged for review: {n_flagged}")
     print()
