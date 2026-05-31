@@ -17,14 +17,14 @@ bundle.
 
 ```bash
 # T4 lysozyme demo — L99A / T157I / T26S Matthews-lab benchmarks (default)
-python skills/stability-predictor/stability_predictor.py --demo --output /tmp/sp_demo
+uv run python skills/stability-predictor/stability_predictor.py --demo --output /tmp/sp_demo
 
 # p53 demo — Y220C destabilising cancer mutation
-python skills/stability-predictor/stability_predictor.py \
+uv run python skills/stability-predictor/stability_predictor.py \
   --demo --demo-set p53 --output /tmp/sp_p53
 
 # Real run — your own structure + mutations
-python skills/stability-predictor/stability_predictor.py \
+uv run python skills/stability-predictor/stability_predictor.py \
   --structure my_protein.pdb \
   --mutations my_mutations.json \
   --method rasp \
