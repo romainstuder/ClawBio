@@ -6,19 +6,19 @@ See SKILL.md for full specification, README.md for quick start.
 
 Usage:
     # Default: RaSP on user data
-    python stability_predictor.py --structure protein.pdb --mutations mutations.json --output results/
+    uv run python stability_predictor.py --structure protein.pdb --mutations mutations.json --output results/
 
     # Specific method
-    python stability_predictor.py --structure ... --mutations ... --method foldx --output ...
+    uv run python stability_predictor.py --structure ... --mutations ... --method foldx --output ...
 
     # All available methods + consensus
-    python stability_predictor.py --structure ... --mutations ... --method all --output ...
+    uv run python stability_predictor.py --structure ... --mutations ... --method all --output ...
 
     # Clinical demo (CFTR F508del)
-    python stability_predictor.py --demo --output /tmp/sp_demo
+    uv run python stability_predictor.py --demo --output /tmp/sp_demo
 
     # Scientific demo (RubisCO, validates against Studer et al. 2014)
-    python stability_predictor.py --demo --demo-set rubisco --output /tmp/sp_demo
+    uv run python stability_predictor.py --demo --demo-set rubisco --output /tmp/sp_demo
 """
 
 from __future__ import annotations
@@ -27,6 +27,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from typing import TypedDict
 
 from stability_predictor_core.consensus import aggregate
 from stability_predictor_core.io import (
@@ -67,7 +68,16 @@ METHOD_ALL = "all"
 # Demo data lives next to this script under demo_data/.
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _DEMO_DIR = _SCRIPT_DIR / "demo_data"
-_DEMO_SETS = {
+
+
+class _DemoSet(TypedDict):
+    structure: Path
+    mutations: Path
+    caches: dict[str, Path]
+    description: str
+
+
+_DEMO_SETS: dict[str, _DemoSet] = {
     "t4lysozyme": {
         "structure": _DEMO_DIR / "t4lysozyme.pdb",
         "mutations": _DEMO_DIR / "t4lysozyme_mutations.json",
@@ -415,10 +425,10 @@ def _print_summary(consensus_results: list, output_dir: Path) -> None:
         print(f"  flagged for review: {n_flagged}")
     print()
     print(f"Outputs written to: {output_dir}")
-    print(f"  report.md          — human-readable summary")
-    print(f"  result.json        — top-level machine-readable")
-    print(f"  predictions.json   — per-mutation per-method detail")
-    print(f"  reproducibility/   — replay bundle + checksums")
+    print("  report.md          — human-readable summary")
+    print("  result.json        — top-level machine-readable")
+    print("  predictions.json   — per-mutation per-method detail")
+    print("  reproducibility/   — replay bundle + checksums")
     print()
 
 
