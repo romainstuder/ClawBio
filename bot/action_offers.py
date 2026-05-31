@@ -16,6 +16,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable
 
+from clawbio.contract_alerts import normalise_contract_alerts, render_contract_alerts
+
 DEFAULT_PENDING_ACTION_TTL_SECONDS = 30 * 60
 
 # These are stand-alone confirmation/navigation phrases. They are intentionally
@@ -139,15 +141,23 @@ def load_bundle_fields(output_dir: str | Path | None) -> dict[str, Any]:
             # - chat_summary_lines: concise text written by the skill for chat
             # - preferred_artifacts: files the UI should prioritize displaying
             # - suggested_actions: deterministic follow-up requests to offer
+            # - workflow_state: skill-emitted state identity/lifecycle metadata
+            # - contract_alerts: structured contract/path discrepancy alerts
             # - report_md: full markdown report embedded in result.json
             for key in (
                 "chat_summary_lines",
                 "preferred_artifacts",
                 "suggested_actions",
+                "workflow_state",
+                "contract_alerts",
                 "report_md",
             ):
                 if key in payload:
-                    fields[key] = payload[key]
+                    fields[key] = (
+                        normalise_contract_alerts(payload[key])
+                        if key == "contract_alerts"
+                        else payload[key]
+                    )
 
     if "report_md" not in fields:
         for pattern in ("report.md", "*_report.md", "*.md"):
@@ -162,14 +172,39 @@ def load_bundle_fields(output_dir: str | Path | None) -> dict[str, Any]:
     return fields
 
 
-def render_action_offer(actions: list[dict[str, Any]]) -> str:
-    """Render actions as numbered chat choices."""
-    if not actions:
+def render_workflow_state_header(workflow_state: dict[str, Any] | None) -> str:
+    """Render the optional cross-skill workflow lifecycle header."""
+    if not isinstance(workflow_state, dict):
         return ""
-    lines = ["I can do the next step for you:"]
+    lifecycle = workflow_state.get("lifecycle")
+    if not isinstance(lifecycle, str) or not lifecycle.strip():
+        return ""
+    lifecycle = lifecycle.strip()
+    state_label = workflow_state.get("state_label")
+    if isinstance(state_label, str) and state_label.strip():
+        return f"State: {lifecycle} — {state_label.strip()}"
+    return f"State: {lifecycle}"
+
+
+def render_action_offer(
+    actions: list[dict[str, Any]],
+    *,
+    workflow_state: dict[str, Any] | None = None,
+) -> str:
+    """Render actions as numbered chat choices."""
+    header = render_workflow_state_header(workflow_state)
+    if not actions:
+        return header
+    lines = []
+    if header:
+        lines.append(header)
+    lines.append("I can do the next step for you:")
     for idx, action in enumerate(actions, start=1):
         suffix = ""
-        if action.get("requires_confirmation") is False:
+        estimate = action.get("estimate")
+        if isinstance(estimate, str) and estimate.strip():
+            suffix = f" ({estimate.strip()})"
+        elif action.get("requires_confirmation") is False:
             suffix = " (safe refresh)"
         lines.append(f"{idx}. {action.get('label', f'Action {idx}')}{suffix}")
     if len(actions) == 1:

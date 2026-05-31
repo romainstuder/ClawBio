@@ -6,36 +6,17 @@ ClawBio is a collection of modular AI agent skills for bioinformatics, designed 
 
 ## System Design
 
-```
-                    ┌─────────────────────┐
-                    │    User Request      │
-                    │  (natural language)  │
-                    └──────────┬──────────┘
-                               │
-                    ┌──────────▼──────────┐
-                    │   Bio Orchestrator   │
-                    │  (routing + planning │
-                    │   + report assembly) │
-                    └──────────┬──────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                 │
-    ┌─────────▼───────┐ ┌─────▼──────┐ ┌───────▼────────┐
-    │  Equity Scorer   │ │ Seq Wrangler│ │ Struct Predictor│
-    │  VCF Annotator   │ │ scRNA Orch  │ │ Lit Synthesizer │
-    │                  │ │             │ │ Repro Enforcer  │
-    └─────────┬───────┘ └─────┬──────┘ └───────┬────────┘
-              │                │                 │
-              └────────────────┼────────────────┘
-                               │
-                    ┌──────────▼──────────┐
-                    │   Output Layer       │
-                    │  - Markdown report   │
-                    │  - Figures (PNG/SVG) │
-                    │  - Optional repro    │
-                    │    bundle            │
-                    └─────────────────────┘
-```
+ClawBio is easiest to read as a set of layers rather than one monolithic
+agent. Each layer has a narrow responsibility:
+
+| Layer | Main Files / Components | Responsibility |
+|-------|-------------------------|----------------|
+| Interfaces | CLI, Python API, RoboTerri, Discord, OpenClaw gateway, Claude Code | Accept a user request, collect files, and either name a skill directly or ask for routing. |
+| Skill self-description | `skills/<name>/SKILL.md`, optional `skills/<name>/INTENTS.json`, `skills/catalog.json` | Describe what the skill does, what inputs it accepts, how it is invoked, and when it should be considered. |
+| Routing and planning | `skills/bio-orchestrator/`, `clawbio/skill_intents.py`, `docs/skill-intents.md` | Detect file types, headers, keywords, and structured intent descriptors; select a suitable skill or plan a small chain. |
+| Runner and safety gate | `clawbio.py` / `clawbio.run_skill()` | Validate the selected skill, enforce allowed flags, prepare output directories, and launch the skill script. |
+| Specialist skill execution | `skills/<name>/<script>.py` plus skill-local helpers | Run the domain method and produce skill-owned outputs. |
+| Output contract | `report.md`, `result.json`, `tables/`, `figures/`, `reproducibility/` | Return human-readable reports, machine-readable results, preferred artifacts, suggested follow-ups, and replay metadata where supported. |
 
 ## Routing Logic
 
@@ -56,6 +37,24 @@ Every skill works standalone. The Bio Orchestrator adds:
 
 A user can invoke any skill directly without the orchestrator.
 
+## Skill Self-Description
+
+Skills describe themselves before they execute. `SKILL.md` is the primary
+human- and agent-readable contract: it records the domain method, expected
+inputs, outputs, safety boundaries, demo commands, and gotchas. Python scripts
+are implementations of that contract, not replacements for it.
+
+Some skills also publish optional intent descriptors in `INTENTS.json` or
+`skill_intents.json`; see [docs/skill-intents.md](skill-intents.md) for the
+descriptor schema. These files are data-only routing metadata for chat adapters
+and planners: aliases, trigger terms, slot extraction rules, safe execution
+plans, and confirmation gates. They do not grant new shell powers or new CLI
+flags; `clawbio.py` still enforces the registered allow-list.
+
+Together, `SKILL.md`, optional intent descriptors, and `skills/catalog.json`
+let agents discover what a skill can do without scraping prose from previous
+chat sessions.
+
 ## Data Flow
 
 ```
@@ -74,11 +73,38 @@ Results (tables, metrics, intermediate files)
 Visualisation (matplotlib/seaborn figures)
     │
     ▼
+Structured Output (result.json + preferred artifacts)
+    │
+    ▼
 Report Assembly (markdown + embedded figures)
     │
     ▼
 Optional Reproducibility Export (helper-backed commands, environment, checksums)
 ```
+
+The same run may also expose UI-facing fields from `result.json`, including
+`chat_summary_lines`, `preferred_artifacts`, `workflow_state`,
+`suggested_actions`, and `contract_alerts`. These fields let chat or GUI
+frontends render compact summaries, offer deterministic next steps, and surface
+contract/path mismatches without inventing follow-up commands. See
+[docs/skill-action-contract.md](skill-action-contract.md) for the canonical
+schema reference.
+
+## Structured Next Steps
+
+Where supported, a skill can describe valid follow-up actions in its
+`result.json` output:
+
+- `workflow_state`: the lifecycle, label, and stable state identity for the
+  completed run.
+- `preferred_artifacts`: files the UI should surface first.
+- `suggested_actions`: deterministic next-step requests, such as "show top
+  results" or "summarise by category".
+- `chat_summary_lines`: short skill-authored text suitable for chat adapters.
+
+This keeps next-step menus tied to the skill's own state rather than to an
+agent's guess. Not every skill emits these fields yet; skills without them still
+return the standard report and output bundle.
 
 ## Privacy Model
 
