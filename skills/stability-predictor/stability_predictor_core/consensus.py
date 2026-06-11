@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from statistics import mean, stdev
+from statistics import mean
 
 from .methods.base import Mutation, StabilityPrediction
 
@@ -140,13 +140,13 @@ def _aggregate_one(
             flags=flags,
         )
 
-    ddg_values = [p.ddg for p in successful]
-    consensus = mean(ddg_values)  # type: ignore[arg-type]
+    ddg_values: list[float] = [p.ddg for p in successful if p.ddg is not None]
+    consensus = mean(ddg_values)
     direction = classify_direction(consensus, neutral_band)
 
-    directions = {classify_direction(d, neutral_band) for d in ddg_values}  # type: ignore[arg-type]
+    directions = {classify_direction(d, neutral_band) for d in ddg_values}
     agreed_direction = len(directions) == 1
-    agreed_magnitude = _agreed_on_magnitude(ddg_values, agreement_tolerance)  # type: ignore[arg-type]
+    agreed_magnitude = _agreed_on_magnitude(ddg_values, agreement_tolerance)
 
     confidence = _compute_confidence(
         n_succeeded=n_succeeded,
@@ -158,7 +158,7 @@ def _aggregate_one(
     if not agreed_direction and n_succeeded >= 2:
         flags.append("Methods disagree on direction; review individual predictions")
     if not agreed_magnitude and n_succeeded >= 2:
-        spread = max(ddg_values) - min(ddg_values)  # type: ignore[type-var]
+        spread = max(ddg_values) - min(ddg_values)
         flags.append(f"Method spread {spread:.2f} kcal/mol exceeds tolerance")
     if n_succeeded < n_attempted:
         flags.append(f"{n_attempted - n_succeeded} of {n_attempted} methods failed")

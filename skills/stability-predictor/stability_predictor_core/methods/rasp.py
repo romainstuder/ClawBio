@@ -17,6 +17,7 @@ import importlib
 import importlib.util
 import logging
 from pathlib import Path
+from types import ModuleType
 
 from .base import Mutation, StabilityMethod, StabilityPrediction
 
@@ -42,7 +43,7 @@ class RaSP(StabilityMethod):
 
     def __init__(self) -> None:
         super().__init__()
-        self._module = None
+        self._module: ModuleType | None = None
         self._load_error: str | None = None
         self._try_import()
 

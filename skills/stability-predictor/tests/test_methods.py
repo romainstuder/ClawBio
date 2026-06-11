@@ -12,7 +12,6 @@ from pathlib import Path
 from stability_predictor_core.methods.base import (
     Mutation,
     StabilityMethod,
-    StabilityPrediction,
 )
 from stability_predictor_core.methods.foldx import FoldX
 from stability_predictor_core.methods.precomputed import Precomputed
