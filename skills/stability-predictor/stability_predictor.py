@@ -14,11 +14,11 @@ Usage:
     # All available methods + consensus
     uv run python stability_predictor.py --structure ... --mutations ... --method all --output ...
 
-    # Clinical demo (CFTR F508del)
+    # Demo (T4 lysozyme L99A/T157I/T26S Matthews-lab benchmarks, default)
     uv run python stability_predictor.py --demo --output /tmp/sp_demo
 
-    # Scientific demo (RubisCO, validates against Studer et al. 2014)
-    uv run python stability_predictor.py --demo --demo-set rubisco --output /tmp/sp_demo
+    # Demo (p53 Y220C destabilising cancer mutation)
+    uv run python stability_predictor.py --demo --demo-set p53 --output /tmp/sp_demo
 """
 
 from __future__ import annotations
